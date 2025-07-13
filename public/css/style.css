@@ -1,0 +1,330 @@
+  * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+  }
+
+  body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+  }
+
+  .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+  }
+
+  h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      color: #333;
+      margin-bottom: 30px;
+      font-weight: 700;
+  }
+
+  .steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      position: relative;
+  }
+
+  .step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      padding: 0 10px;
+  }
+
+  .step-number {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #ccc;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      font-weight: bold;
+      font-size: 14px;
+  }
+
+  .step.active .step-number {
+      background-color: #dc3545;
+  }
+
+  .step.completed .step-number {
+      background-color: #dc3545;
+  }
+
+  .step-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+  }
+
+  .step.active .step-title {
+      color: #dc3545;
+  }
+
+  .step-line {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      right: -50%;
+      height: 2px;
+      background-color: #ccc;
+      z-index: -1;
+  }
+
+  .step:last-child .step-line {
+      display: none;
+  }
+
+  .step.completed .step-line {
+      background-color: #dc3545;
+  }
+
+  .form-container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-step {
+      display: none;
+  }
+
+  .form-step.active {
+      display: block;
+  }
+
+  .form-group {
+      margin-bottom: 20px;
+  }
+
+  label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+  }
+
+  select,
+  input,
+  textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+  }
+
+  select:focus,
+  input:focus,
+  textarea:focus {
+      outline: none;
+      border-color: #dc3545;
+  }
+
+  .form-row {
+      display: flex;
+      gap: 20px;
+  }
+
+  .form-row .form-group {
+      flex: 1;
+  }
+
+  .calendar-container {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 20px;
+  }
+
+  .calendar {
+      flex: 1;
+  }
+
+  .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+  }
+
+  .calendar-nav {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #666;
+      padding: 5px 10px;
+  }
+
+  .calendar-nav:hover {
+      color: #dc3545;
+  }
+
+  .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      margin-bottom: 20px;
+  }
+
+  .calendar-day {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: background-color 0.2s;
+  }
+
+  .calendar-day:hover {
+      background-color: #f0f0f0;
+  }
+
+  .calendar-day.selected {
+      background-color: #dc3545;
+      color: white;
+  }
+
+  .calendar-day.disabled {
+      color: #ccc;
+      cursor: not-allowed;
+  }
+
+  .calendar-day.other-month {
+      color: #ccc;
+  }
+
+  .calendar-weekday {
+      text-align: center;
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 10px;
+  }
+
+  .time-slots {
+      flex: 1;
+  }
+
+  .time-slot-header {
+      background-color: #dc3545;
+      color: white;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      text-align: center;
+      font-weight: 600;
+  }
+
+  .time-slot {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+  }
+
+  .time-slot:hover {
+      background-color: #f0f0f0;
+  }
+
+  .time-slot.selected {
+      background-color: #dc3545;
+      color: white;
+      border-color: #dc3545;
+  }
+
+  .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+  }
+
+  .btn-primary {
+      background-color: #dc3545;
+      color: white;
+  }
+
+  .btn-primary:hover {
+      background-color: #c82333;
+  }
+
+  .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+  }
+
+  .btn-secondary:hover {
+      background-color: #5a6268;
+  }
+
+  .btn-navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+  }
+
+  .success-message {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      border: 1px solid #c3e6cb;
+  }
+
+  .error-message {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      border: 1px solid #f5c6cb;
+  }
+
+  .description {
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.5;
+  }
+
+  .phone-input {
+      display: flex;
+      gap: 10px;
+  }
+
+  .country-code {
+      width: 80px;
+      flex-shrink: 0;
+  }
+
+  .hidden {
+      display: none;
+  }
+
+  .loading {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+  }
