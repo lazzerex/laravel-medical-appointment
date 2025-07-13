@@ -7,6 +7,16 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Screenshots
+<img width="1563" height="783" alt="image" src="https://github.com/user-attachments/assets/aac68058-f88a-4595-a4e0-5dc113e49037" />
+
+<img width="1573" height="880" alt="image" src="https://github.com/user-attachments/assets/77699477-93bf-40db-83be-eb9677fad081" />
+
+<img width="1566" height="810" alt="image" src="https://github.com/user-attachments/assets/876c9a42-b0f2-4df9-be79-d97f42c1c60f" />
+
+<img width="1600" height="728" alt="image" src="https://github.com/user-attachments/assets/6ebd31a6-3011-4175-85fe-1fded3408d74" />
+
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
