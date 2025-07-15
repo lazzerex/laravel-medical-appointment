@@ -1,0 +1,116 @@
+@extends('layouts.app')
+
+@section('title', 'Quản lý Cuộc Hẹn')
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="list-group">
+                <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="{{ route('dashboard.doctors') }}" class="list-group-item list-group-item-action">Quản lý Bác sĩ</a>
+                <a href="{{ route('dashboard.appointments') }}" class="list-group-item list-group-item-action active">Quản lý Cuộc Hẹn</a>
+            </div>
+        </div>
+        <div class="col-md-10">
+
+@section('content')
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Quản lý Cuộc Hẹn</h1>
+    </div>
+
+    @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
+
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <form class="d-flex gap-2" method="GET" action="{{ route('dashboard.appointments') }}">
+                    <div class="input-group">
+                        <select class="form-select" name="status">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Chờ xác nhận</option>
+                            <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>Đã xác nhận</option>
+                            <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
+                            <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Đã hoàn thành</option>
+                        </select>
+                        <button class="btn btn-outline-secondary" type="submit">Lọc</button>
+                    </div>
+                </form>
+                <div class="d-flex gap-2">
+                    <a href="{{ route('dashboard.appointments') }}" class="btn btn-outline-secondary">Xem tất cả</a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ngày hẹn</th>
+                            <th>Giờ hẹn</th>
+                            <th>Bệnh nhân</th>
+                            <th>Bác sĩ</th>
+                            <th>Trạng thái</th>
+                            <th>Ghi chú</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($appointments as $appointment)
+                        <tr>
+                            <td>{{ $appointment->appointment_date }}</td>
+                            <td>{{ $appointment->appointment_time }}</td>
+                            <td>{{ $appointment->patient_name }}</td>
+                            <td>{{ $appointment->doctor->title }} {{ $appointment->doctor->name }}</td>
+                            <td>
+                                @php
+                                $statusColor = match($appointment->status) {
+                                    'pending' => 'warning',
+                                    'confirmed' => 'success',
+                                    'cancelled' => 'danger',
+                                    default => 'primary'
+                                };
+                            @endphp
+                            <span class="badge bg-{{ $statusColor }}">
+                                    {{ Str::ucfirst($appointment->status) }}
+                                </span>
+                            </td>
+                            <td>{{ Str::limit($appointment->notes, 50) }}</td>
+                            <td>
+                                <form action="{{ route('dashboard.appointments.update', $appointment->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <select name="status" onchange="this.form.submit()" class="form-select form-select-sm">
+                                        <option value="pending" {{ $appointment->status == 'pending' ? 'selected' : '' }}>Chờ xác nhận</option>
+                                        <option value="confirmed" {{ $appointment->status == 'confirmed' ? 'selected' : '' }}>Đã xác nhận</option>
+                                        <option value="cancelled" {{ $appointment->status == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
+                                        <option value="completed" {{ $appointment->status == 'completed' ? 'selected' : '' }}>Đã hoàn thành</option>
+                                    </select>
+                                </form>
+                                <form action="{{ route('dashboard.appointments.destroy', $appointment->id) }}" method="POST" class="d-inline ms-2">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa cuộc hẹn này không?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-center mt-3">
+                {{ $appointments->links() }}
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
+@endsection

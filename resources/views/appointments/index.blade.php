@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url('/') }}">Medical Appointment</a>
+            <div class="d-flex">
+                <a href="{{ route('dashboard') }}" class="btn btn-outline-primary ms-2">Dashboard</a>
+            </div>
+        </div>
+    </nav>
     <div class="container">
         <h1>ĐẶT HẸN KHÁM</h1>
         
