@@ -236,7 +236,10 @@ class AppointmentBooking {
         event.target.classList.add('selected');
 
         this.selectedDate = date;
-        document.getElementById('selectedDate').value = date.toISOString().split('T')[0];
+        // Format date as YYYY-MM-DD to avoid timezone issues
+        document.getElementById('selectedDate').value = date.getFullYear() + '-' + 
+            String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+            String(date.getDate()).padStart(2, '0');
 
         // Update time slot header
         const dayNames = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
