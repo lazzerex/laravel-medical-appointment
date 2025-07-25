@@ -37,7 +37,7 @@ class DoctorController extends Controller
 
         Doctor::create($validated);
         
-        return redirect()->route('doctors.index')
+        return redirect()->route('dashboard.doctors')
             ->with('success', 'Bác sĩ đã được tạo thành công!');
     }
 
@@ -60,7 +60,7 @@ class DoctorController extends Controller
 
         $doctor->update($validated);
         
-        return redirect()->route('doctors.index')
+        return redirect()->route('dashboard.doctors')
             ->with('success', 'Bác sĩ đã được cập nhật thành công!');
     }
 
@@ -68,7 +68,7 @@ class DoctorController extends Controller
     {
         $doctor->delete();
         
-        return redirect()->route('doctors.index')
+        return redirect()->route('dashboard.doctors')
             ->with('success', 'Bác sĩ đã được xóa thành công!');
     }
 }
