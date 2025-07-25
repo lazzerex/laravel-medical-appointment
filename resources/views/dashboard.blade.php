@@ -18,7 +18,7 @@
             </div>
 
             <div class="row">
-                <!-- Statistics Cards -->
+                <!-- stats -->
                 <div class="col-md-3 mb-4">
                     <div class="card">
                         <div class="card-body">
@@ -60,7 +60,7 @@
                 </div>
             </div>
 
-            <!-- Recent Appointments -->
+            <!-- recent appointments -->
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Cuộc hẹn gần đây</h5>

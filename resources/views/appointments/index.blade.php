@@ -48,14 +48,14 @@
                 <!-- Step 1: Chọn bệnh viện và chuyên khoa -->
                 <div class="form-step active" data-step="1">
                     <div class="description">
-                        Vui lòng chọn bệnh viện và vấn đề cần thăm khám.
+                        Vui lòng chọn địa điểm khám bệnh (bệnh viện) và dịch vụ khám.
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="hospital">Chọn bệnh viện</label>
+                            <label for="hospital">Chọn địa điểm khám bệnh</label>
                             <select id="hospital" name="hospital_id" required>
-                                <option value="">Chọn bệnh viện</option>
+                                <option value="">Chọn địa điểm khám bệnh</option>
                                 @foreach($hospitals as $hospital)
                                     <option value="{{ $hospital->id }}">{{ $hospital->name }}</option>
                                 @endforeach
@@ -63,9 +63,9 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="specialty">Vấn đề</label>
+                            <label for="specialty">Dịch vụ khám</label>
                             <select id="specialty" name="specialty_id" required>
-                                <option value="">Chọn vấn đề</option>
+                                <option value="">Chọn dịch vụ khám</option>
                                 @foreach($specialties as $specialty)
                                     <option value="{{ $specialty->id }}">{{ $specialty->name }}</option>
                                 @endforeach
@@ -76,7 +76,7 @@
                     <div class="form-group">
                         <label for="doctor">Chọn bác sĩ</label>
                         <select id="doctor" name="doctor_id" required disabled>
-                            <option value="">Vui lòng chọn bệnh viện và chuyên khoa trước</option>
+                            <option value="">Vui lòng chọn địa điểm khám bệnh và dịch vụ khám trước</option>
                         </select>
                     </div>
                 </div>
