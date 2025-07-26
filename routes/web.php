@@ -5,6 +5,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AppointmentManagementController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SpecialtyController;
 
 // Appointment booking (public)
 Route::get('/', [AppointmentController::class, 'index'])->name('appointments.form');
@@ -24,3 +25,6 @@ Route::delete('/dashboard/doctors/{doctor}', [DoctorController::class, 'destroy'
 Route::get('/dashboard/appointments', [AppointmentManagementController::class, 'index'])->name('dashboard.appointments');
 Route::put('/dashboard/appointments/{appointment}', [AppointmentManagementController::class, 'update'])->name('dashboard.appointments.update');
 Route::delete('/dashboard/appointments/{appointment}', [AppointmentManagementController::class, 'destroy'])->name('dashboard.appointments.destroy');
+
+// Specialty Management Routes
+Route::resource('/dashboard/specialties', SpecialtyController::class)->names('dashboard.specialties');

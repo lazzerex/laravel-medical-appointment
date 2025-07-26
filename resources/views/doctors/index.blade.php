@@ -10,6 +10,7 @@
                 <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
                 <a href="{{ route('dashboard.doctors') }}" class="list-group-item list-group-item-action active">Quản lý Bác sĩ</a>
                 <a href="{{ route('dashboard.appointments') }}" class="list-group-item list-group-item-action">Quản lý Cuộc Hẹn</a>
+                <a href="{{ route('dashboard.specialties.index') }}" class="list-group-item list-group-item-action">Quản lý Dịch vụ</a>
             </div>
         </div>
         <div class="col-md-10">

@@ -10,6 +10,7 @@
                 <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
                 <a href="{{ route('dashboard.doctors') }}" class="list-group-item list-group-item-action">Quản lý Bác sĩ</a>
                 <a href="{{ route('dashboard.appointments') }}" class="list-group-item list-group-item-action active">Quản lý Cuộc Hẹn</a>
+                <a href="{{ route('dashboard.specialties.index') }}" class="list-group-item list-group-item-action">Quản lý Dịch vụ</a>
             </div>
         </div>
         <div class="col-md-10">
@@ -102,9 +103,51 @@
                         </table>
                     </div>
 
-                    <div class="d-flex justify-content-center mt-3">
-                        {{ $appointments->links() }}
-                    </div>
+                    @if(method_exists($appointments, 'hasPages') && $appointments->hasPages())
+                        <div class="d-flex justify-content-center mt-3">
+                            <nav>
+                                <ul class="pagination pagination-sm">
+                                    <!-- Previous Page Link -->
+                                    @if ($appointments->onFirstPage())
+                                        <li class="page-item disabled">
+                                            <span class="page-link">&laquo;</span>
+                                        </li>
+                                    @else
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $appointments->previousPageUrl() }}" rel="prev">&laquo;</a>
+                                        </li>
+                                    @endif
+
+                                    <!-- Pagination Elements -->
+                                    @php
+                                        $lastPage = method_exists($appointments, 'lastPage') ? $appointments->lastPage() : 1;
+                                    @endphp
+                                    @for ($page = 1; $page <= $lastPage; $page++)
+                                        @if ($page == $appointments->currentPage())
+                                            <li class="page-item active">
+                                                <span class="page-link">{{ $page }}</span>
+                                            </li>
+                                        @else
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ $appointments->url($page) }}">{{ $page }}</a>
+                                            </li>
+                                        @endif
+                                    @endfor
+
+                                    <!-- Next Page Link -->
+                                    @if ($appointments->hasMorePages())
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $appointments->nextPageUrl() }}" rel="next">&raquo;</a>
+                                        </li>
+                                    @else
+                                        <li class="page-item disabled">
+                                            <span class="page-link">&raquo;</span>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </nav>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
