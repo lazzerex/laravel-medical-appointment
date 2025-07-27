@@ -188,9 +188,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const statusFilter = document.getElementById('statusFilter');
     if (statusFilter) {
         statusFilter.addEventListener('change', function() {
-            // Optional: Auto-submit the form when selection changes
-            // Uncomment the line below if you want instant filtering
-            // this.form.submit();
+            // Auto-submit the form when selection changes for instant filtering
+            this.form.submit();
         });
     }
 });
