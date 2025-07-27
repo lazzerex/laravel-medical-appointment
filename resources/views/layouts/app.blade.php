@@ -21,6 +21,7 @@
     <style>
         /* Include the CSS from the previous artifact here */
         
+        
         /* Root Variables for Consistent Theming */
         :root {
           --primary-color: #2563eb;
