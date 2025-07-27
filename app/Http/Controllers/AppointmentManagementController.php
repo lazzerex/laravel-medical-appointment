@@ -10,13 +10,18 @@ use Illuminate\Http\Request;
 
 class AppointmentManagementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $appointments = Appointment::with(['doctor', 'hospital', 'specialty'])
+        $query = Appointment::with(['doctor', 'hospital', 'specialty'])
             ->orderBy('appointment_date', 'desc')
-            ->orderBy('appointment_time', 'desc')
-            ->paginate(10);
+            ->orderBy('appointment_time', 'desc');
+
+        // Filter by status if provided and not empty
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
         
+        $appointments = $query->paginate(10);
         $doctors = Doctor::all();
         $hospitals = Hospital::all();
         $specialties = Specialty::all();
@@ -33,7 +38,7 @@ class AppointmentManagementController extends Controller
 
         $appointment->update($validated);
         
-        return redirect()->route('appointments.management')
+        return redirect()->route('dashboard.appointments')
             ->with('success', 'Đã cập nhật trạng thái cuộc hẹn thành công!');
     }
 
@@ -41,7 +46,7 @@ class AppointmentManagementController extends Controller
     {
         $appointment->delete();
         
-        return redirect()->route('appointments.management')
+        return redirect()->route('dashboard.appointments')
             ->with('success', 'Đã xóa cuộc hẹn thành công!');
     }
 }
