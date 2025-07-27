@@ -8,6 +8,9 @@
 </p>
 
 ## Screenshots
+
+### Đặt Hẹn Khám
+
 <img width="1563" height="783" alt="image" src="https://github.com/user-attachments/assets/aac68058-f88a-4595-a4e0-5dc113e49037" />
 
 <img width="1573" height="880" alt="image" src="https://github.com/user-attachments/assets/77699477-93bf-40db-83be-eb9677fad081" />
@@ -16,6 +19,15 @@
 
 <img width="1600" height="728" alt="image" src="https://github.com/user-attachments/assets/6ebd31a6-3011-4175-85fe-1fded3408d74" />
 
+### Giao diện quản lý
+
+<img width="1920" height="842" alt="image" src="https://github.com/user-attachments/assets/f1bc81db-bc92-49ed-afcf-5530bc183e14" />
+
+<img width="1899" height="918" alt="image" src="https://github.com/user-attachments/assets/099e92dd-09ed-4f69-bc9c-364370f59f7e" />
+
+<img width="1920" height="737" alt="image" src="https://github.com/user-attachments/assets/e7113604-3d57-436b-b8c9-27686b6b1cd9" />
+
+<img width="1906" height="916" alt="image" src="https://github.com/user-attachments/assets/06de36a7-5308-4612-a4a6-4af45188add2" />
 
 ## About Laravel
 
