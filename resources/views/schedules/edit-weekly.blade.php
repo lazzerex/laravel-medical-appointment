@@ -24,9 +24,9 @@
                     </p>
                 </div>
                 <div>
-                    <a href="{{ route('schedules.show', $doctor) }}" class="btn btn-secondary me-2">
+                    <!-- <a href="{{ route('schedules.show', $doctor) }}" class="btn btn-secondary me-2">
                         <i class="fas fa-eye"></i> Xem Chi Tiết
-                    </a>
+                    </a> -->
                     <a href="{{ route('schedules.index') }}" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left"></i> Quay Lại
                     </a>
@@ -173,9 +173,9 @@
                                 </small>
                             </div>
                             <div>
-                                <a href="{{ route('schedules.show', $doctor) }}" class="btn btn-secondary me-2">
+                                <!-- <a href="{{ route('schedules.show', $doctor) }}" class="btn btn-secondary me-2">
                                     Hủy
-                                </a>
+                                </a> -->
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save me-2"></i>Lưu Lịch Làm Việc
                                 </button>
