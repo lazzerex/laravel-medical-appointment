@@ -9,6 +9,7 @@ use App\Models\Appointment;
 use App\Http\Requests\AppointmentRequest;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class AppointmentController extends Controller
 {
@@ -79,14 +80,14 @@ class AppointmentController extends Controller
     public function store(AppointmentRequest $request)
     {
         // Debug log the incoming request data
-        \Log::info('Appointment Request Data:', $request->all());
-        
+        Log::info('Appointment Request Data:', $request->all());
+
         // Additional validation for slot availability
         $doctor = Doctor::find($request->doctor_id);
-        
+
         // Debug log the doctor and slot availability
-        \Log::info('Doctor:', ['id' => $doctor ? $doctor->id : null]);
-        \Log::info('Appointment Date/Time:', [
+        Log::info('Doctor:', ['id' => $doctor ? $doctor->id : null]);
+        Log::info('Appointment Date/Time:', [
             'date' => $request->appointment_date,
             'time' => $request->appointment_time
         ]);
