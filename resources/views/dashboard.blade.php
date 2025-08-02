@@ -11,6 +11,7 @@
                 <a href="{{ route('dashboard.doctors') }}" class="list-group-item list-group-item-action">Quản lý Bác sĩ</a>
                 <a href="{{ route('dashboard.appointments') }}" class="list-group-item list-group-item-action">Quản lý Cuộc Hẹn</a>
                 <a href="{{ route('dashboard.specialties.index') }}" class="list-group-item list-group-item-action">Quản lý Dịch vụ</a>
+                <a href="{{ route('schedules.index') }}" class="list-group-item list-group-item-action">Quản lý Lịch Làm Việc</a>
             </div>
         </div>
         <div class="col-md-10">

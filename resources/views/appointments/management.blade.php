@@ -11,6 +11,8 @@
                 <a href="{{ route('dashboard.doctors') }}" class="list-group-item list-group-item-action">Quản lý Bác sĩ</a>
                 <a href="{{ route('dashboard.appointments') }}" class="list-group-item list-group-item-action active">Quản lý Cuộc Hẹn</a>
                 <a href="{{ route('dashboard.specialties.index') }}" class="list-group-item list-group-item-action">Quản lý Dịch vụ</a>
+                <a href="{{ route('schedules.index') }}" class="list-group-item list-group-item-action">Quản lý Lịch Làm Việc</a>
+
             </div>
         </div>
         <div class="col-md-10">
@@ -42,7 +44,7 @@
                                 </button>
                             </div>
                         </form>
-                        
+
                         <div class="d-flex gap-2">
                             <a href="{{ route('dashboard.appointments') }}" class="btn btn-outline-secondary">
                                 <i class="fas fa-refresh"></i> Xem tất cả
@@ -54,23 +56,23 @@
                     @if(request('status'))
                     <div class="alert alert-info mb-3">
                         <i class="fas fa-info-circle"></i>
-                        Đang hiển thị cuộc hẹn với trạng thái: 
+                        Đang hiển thị cuộc hẹn với trạng thái:
                         <strong>
                             @switch(request('status'))
-                                @case('pending')
-                                    Chờ xác nhận
-                                    @break
-                                @case('confirmed')
-                                    Đã xác nhận
-                                    @break
-                                @case('cancelled')
-                                    Đã hủy
-                                    @break
-                                @case('completed')
-                                    Đã hoàn thành
-                                    @break
-                                @default
-                                    {{ request('status') }}
+                            @case('pending')
+                            Chờ xác nhận
+                            @break
+                            @case('confirmed')
+                            Đã xác nhận
+                            @break
+                            @case('cancelled')
+                            Đã hủy
+                            @break
+                            @case('completed')
+                            Đã hoàn thành
+                            @break
+                            @default
+                            {{ request('status') }}
                             @endswitch
                         </strong>
                         <a href="{{ route('dashboard.appointments') }}" class="btn btn-sm btn-outline-primary ms-2">
@@ -101,7 +103,7 @@
                                         <div>
                                             <strong>{{ $appointment->patient_name }}</strong>
                                             @if($appointment->patient_phone)
-                                                <br><small class="text-muted">{{ $appointment->patient_phone }}</small>
+                                            <br><small class="text-muted">{{ $appointment->patient_phone }}</small>
                                             @endif
                                         </div>
                                     </td>
@@ -109,11 +111,11 @@
                                     <td>
                                         @php
                                         $statusConfig = match($appointment->status) {
-                                            'pending' => ['color' => 'warning', 'text' => 'Chờ xác nhận'],
-                                            'confirmed' => ['color' => 'success', 'text' => 'Đã xác nhận'],
-                                            'cancelled' => ['color' => 'danger', 'text' => 'Đã hủy'],
-                                            'completed' => ['color' => 'primary', 'text' => 'Đã hoàn thành'],
-                                            default => ['color' => 'secondary', 'text' => ucfirst($appointment->status)]
+                                        'pending' => ['color' => 'warning', 'text' => 'Chờ xác nhận'],
+                                        'confirmed' => ['color' => 'success', 'text' => 'Đã xác nhận'],
+                                        'cancelled' => ['color' => 'danger', 'text' => 'Đã hủy'],
+                                        'completed' => ['color' => 'primary', 'text' => 'Đã hoàn thành'],
+                                        default => ['color' => 'secondary', 'text' => ucfirst($appointment->status)]
                                         };
                                         @endphp
                                         <span class="badge bg-{{ $statusConfig['color'] }}">
@@ -122,11 +124,11 @@
                                     </td>
                                     <td>
                                         @if($appointment->notes)
-                                            <span title="{{ $appointment->notes }}">
-                                                {{ Str::limit($appointment->notes, 50) }}
-                                            </span>
+                                        <span title="{{ $appointment->notes }}">
+                                            {{ Str::limit($appointment->notes, 50) }}
+                                        </span>
                                         @else
-                                            <span class="text-muted">Không có ghi chú</span>
+                                        <span class="text-muted">Không có ghi chú</span>
                                         @endif
                                     </td>
                                     <td>
@@ -158,9 +160,9 @@
                                             <i class="fas fa-calendar-times fa-2x mb-2"></i>
                                             <p>Không có cuộc hẹn nào được tìm thấy</p>
                                             @if(request('status'))
-                                                <a href="{{ route('dashboard.appointments') }}" class="btn btn-sm btn-primary">
-                                                    Xem tất cả cuộc hẹn
-                                                </a>
+                                            <a href="{{ route('dashboard.appointments') }}" class="btn btn-sm btn-primary">
+                                                Xem tất cả cuộc hẹn
+                                            </a>
                                             @endif
                                         </div>
                                     </td>
@@ -172,9 +174,9 @@
 
                     <!-- Pagination with filter preservation -->
                     @if(method_exists($appointments, 'hasPages') && $appointments->hasPages())
-                        <div class="d-flex justify-content-center mt-3">
-                            {{ $appointments->appends(request()->query())->links('pagination::bootstrap-4') }}
-                        </div>
+                    <div class="d-flex justify-content-center mt-3">
+                        {{ $appointments->appends(request()->query())->links('pagination::bootstrap-4') }}
+                    </div>
                     @endif
                 </div>
             </div>
@@ -183,15 +185,15 @@
 </div>
 
 <script>
-// Optional: Auto-submit on select change for better UX
-document.addEventListener('DOMContentLoaded', function() {
-    const statusFilter = document.getElementById('statusFilter');
-    if (statusFilter) {
-        statusFilter.addEventListener('change', function() {
-            // Auto-submit the form when selection changes for instant filtering
-            this.form.submit();
-        });
-    }
-});
+    // Optional: Auto-submit on select change for better UX
+    document.addEventListener('DOMContentLoaded', function() {
+        const statusFilter = document.getElementById('statusFilter');
+        if (statusFilter) {
+            statusFilter.addEventListener('change', function() {
+                // Auto-submit the form when selection changes for instant filtering
+                this.form.submit();
+            });
+        }
+    });
 </script>
 @endsection
