@@ -60,7 +60,7 @@ class EnhancedAppointmentBooking {
             if (this.currentStep < this.maxSteps) {
                 this.currentStep++;
                 this.updateUI();
-                
+
                 // Load calendar data when entering step 2
                 if (this.currentStep === 2 && this.selectedDoctor) {
                     this.loadCalendarData();
@@ -200,7 +200,8 @@ class EnhancedAppointmentBooking {
             doctorSelect.innerHTML = '<option value="">Đang tải...</option>';
             doctorSelect.disabled = true;
 
-            const response = await fetch(`/doctors?hospital_id=${hospitalId}&specialty_id=${specialtyId}`);const doctors = await response.json();
+            const response = await fetch(`/doctors?hospital_id=${hospitalId}&specialty_id=${specialtyId}`);
+            const doctors = await response.json();
 
             doctorSelect.innerHTML = '<option value="">Chọn bác sĩ</option>';
             doctors.forEach(doctor => {
@@ -252,13 +253,13 @@ class EnhancedAppointmentBooking {
             'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
         ];
 
-        document.getElementById('currentMonth').textContent = 
+        document.getElementById('currentMonth').textContent =
             `${monthNames[this.currentMonth]} ${this.currentYear}`;
 
         const firstDay = new Date(this.currentYear, this.currentMonth, 1);
         const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
         const startDate = new Date(firstDay);
-        
+
         // Adjust to start from Monday
         const dayOfWeek = firstDay.getDay();
         const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
@@ -302,18 +303,18 @@ class EnhancedAppointmentBooking {
         if (this.calendarData && this.calendarData.calendar_data) {
             const dateStr = date.toISOString().split('T')[0];
             const dayData = this.calendarData.calendar_data.find(d => d.date === dateStr);
-            
+
             if (dayData) {
                 if (dayData.is_available && dayData.available_slots_count > 0) {
                     dayElement.classList.add('available');
                     dayElement.title = `${dayData.available_slots_count} khung giờ trống`;
-                    
+
                     // Add slots count indicator
                     const slotsIndicator = document.createElement('span');
                     slotsIndicator.className = 'slots-count';
                     slotsIndicator.textContent = dayData.available_slots_count;
                     dayElement.appendChild(slotsIndicator);
-                    
+
                     dayElement.addEventListener('click', () => this.selectDate(date));
                 } else if (dayData.is_fully_booked) {
                     dayElement.classList.add('fully-booked');
@@ -348,8 +349,8 @@ class EnhancedAppointmentBooking {
 
         this.selectedDate = date;
         // Format date as YYYY-MM-DD
-        document.getElementById('selectedDate').value = date.getFullYear() + '-' + 
-            String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+        document.getElementById('selectedDate').value = date.getFullYear() + '-' +
+            String(date.getMonth() + 1).padStart(2, '0') + '-' +
             String(date.getDate()).padStart(2, '0');
 
         // Update time slot header
@@ -391,7 +392,7 @@ class EnhancedAppointmentBooking {
 
     renderTimeSlots(data) {
         const timeSlotsContainer = document.getElementById('timeSlots');
-        
+
         if (data.status !== 'available' || !data.slots || data.slots.length === 0) {
             timeSlotsContainer.innerHTML = `
                 <div class="no-slots">
@@ -433,7 +434,11 @@ class EnhancedAppointmentBooking {
         element.classList.add('selected');
 
         this.selectedTime = time;
-        document.getElementById('selectedTime').value = time;
+        const timeInput = document.getElementById('selectedTime');
+        timeInput.value = time;
+
+        console.log('Time slot selected:', time);
+        console.log('Time input value set to:', timeInput.value);
     }
 
     prevMonth() {
@@ -442,7 +447,7 @@ class EnhancedAppointmentBooking {
             this.currentMonth = 11;
             this.currentYear--;
         }
-        
+
         if (this.selectedDoctor) {
             this.loadCalendarData();
         } else {
@@ -456,7 +461,7 @@ class EnhancedAppointmentBooking {
             this.currentMonth = 0;
             this.currentYear++;
         }
-        
+
         if (this.selectedDoctor) {
             this.loadCalendarData();
         } else {
@@ -466,7 +471,32 @@ class EnhancedAppointmentBooking {
 
     async submitAppointment() {
         const nextBtn = document.getElementById('nextBtn');
-        const formData = new FormData(document.getElementById('appointmentForm'));
+        const form = document.getElementById('appointmentForm');
+        const formData = new FormData(form);
+
+        // Log form data for debugging
+        console.log('Form data before submission:');
+        for (let [key, value] of formData.entries()) {
+            console.log(key, ':', value);
+        }
+
+        // Validate required fields
+        const requiredFields = ['hospital_id', 'specialty_id', 'doctor_id', 'patient_name', 'patient_phone', 'patient_email', 'appointment_date', 'appointment_time'];
+        const missingFields = [];
+
+        requiredFields.forEach(field => {
+            if (!formData.get(field)) {
+                missingFields.push(field);
+            }
+        });
+
+        if (missingFields.length > 0) {
+            console.error('Missing required fields:', missingFields);
+            this.showError('Vui lòng điền đầy đủ thông tin bắt buộc.');
+            nextBtn.disabled = false;
+            nextBtn.textContent = 'HOÀN THÀNH';
+            return;
+        }
 
         try {
             // Show loading state
@@ -477,8 +507,11 @@ class EnhancedAppointmentBooking {
                 method: 'POST',
                 body: formData,
                 headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
+                },
+                credentials: 'same-origin'
             });
 
             const result = await response.json();
@@ -487,7 +520,7 @@ class EnhancedAppointmentBooking {
                 // Move to success step
                 this.currentStep = 4;
                 this.updateUI();
-                
+
                 // Update success message
                 const successMessage = document.querySelector('.success-message');
                 if (successMessage) {
@@ -495,13 +528,13 @@ class EnhancedAppointmentBooking {
                 }
             } else {
                 this.showError(result.message || 'Có lỗi xảy ra khi đặt hẹn');
-                
+
                 if (result.errors) {
                     // Handle specific field errors
                     Object.keys(result.errors).forEach(field => {
                         console.error(`${field}: ${result.errors[field].join(', ')}`);
                     });
-                    
+
                     // If time slot error, refresh the slots
                     if (result.errors.appointment_time) {
                         this.loadTimeSlots(this.selectedDate);
@@ -530,14 +563,17 @@ class EnhancedAppointmentBooking {
         const errorAlert = document.createElement('div');
         errorAlert.className = 'error-alert error-message';
         errorAlert.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
-        
+
         // Insert before form
         const formContainer = document.querySelector('.form-container');
         formContainer.insertBefore(errorAlert, formContainer.firstChild);
-        
+
         // Scroll to error
-        errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        
+        errorAlert.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest'
+        });
+
         // Auto-hide after 5 seconds
         setTimeout(() => {
             if (errorAlert) {
@@ -549,5 +585,68 @@ class EnhancedAppointmentBooking {
 
 // Initialize the enhanced application when the page loads
 document.addEventListener('DOMContentLoaded', function () {
-    new EnhancedAppointmentBooking();
+    const app = new EnhancedAppointmentBooking();
+
+    // Add event listener for the manual submission button
+    const submitBtn = document.getElementById('submitAppointmentBtn');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', async function () {
+            const form = document.getElementById('appointmentForm');
+            const formData = new FormData(form);
+            const successContent = document.getElementById('successContent');
+            const loadingContent = document.getElementById('loadingContent');
+
+            // Show loading state
+            successContent.style.display = 'none';
+            loadingContent.style.display = 'block';
+
+            try {
+                const response = await fetch('/appointments', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    credentials: 'same-origin'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Show success message
+                    loadingContent.innerHTML = `
+                            <i class="fas fa-check-circle text-success" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <h3>Thành công!</h3>
+                            <p>${result.message || 'Đặt hẹn khám thành công!'}</p>
+                            <p>Mã đặt hẹn: ${result.appointment?.id || ''}</p>
+                        `;
+
+                    // Disable the submit button
+                    if (submitBtn) submitBtn.style.display = 'none';
+                } else {
+                    // Show error message
+                    loadingContent.innerHTML = `
+                            <i class="fas fa-exclamation-circle text-danger" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <h3>Lỗi</h3>
+                            <p>${result.message || 'Có lỗi xảy ra khi đặt hẹn. Vui lòng thử lại.'}</p>
+                            <button type="button" class="btn btn-secondary mt-3" onclick="window.location.reload()">
+                                <i class="fas fa-sync-alt"></i> Thử lại
+                            </button>
+                        `;
+                }
+            } catch (error) {
+                console.error('Error submitting appointment:', error);
+                loadingContent.innerHTML = `
+                        <i class="fas fa-exclamation-triangle text-warning" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h3>Lỗi kết nối</h3>
+                        <p>Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng và thử lại.</p>
+                        <button type="button" class="btn btn-secondary mt-3" onclick="window.location.reload()">
+                            <i class="fas fa-sync-alt"></i> Thử lại
+                        </button>
+                    `;
+            }
+        });
+    }
 });
