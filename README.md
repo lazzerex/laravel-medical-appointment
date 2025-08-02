@@ -21,13 +21,17 @@
 
 ### Giao diện quản lý
 
-<img width="1920" height="842" alt="image" src="https://github.com/user-attachments/assets/f1bc81db-bc92-49ed-afcf-5530bc183e14" />
+<img width="1918" height="878" alt="image" src="https://github.com/user-attachments/assets/b90bc4c2-83ab-4539-840d-e2f6d9384824" />
 
-<img width="1899" height="918" alt="image" src="https://github.com/user-attachments/assets/099e92dd-09ed-4f69-bc9c-364370f59f7e" />
+<img width="1907" height="889" alt="image" src="https://github.com/user-attachments/assets/01af657d-f16d-49d8-b8c9-62a5c3d498b7" />
 
-<img width="1920" height="737" alt="image" src="https://github.com/user-attachments/assets/e7113604-3d57-436b-b8c9-27686b6b1cd9" />
+<img width="1920" height="828" alt="image" src="https://github.com/user-attachments/assets/8aee6505-d046-4eda-a441-a98c4cf088a0" />
 
-<img width="1906" height="916" alt="image" src="https://github.com/user-attachments/assets/06de36a7-5308-4612-a4a6-4af45188add2" />
+<img width="1911" height="884" alt="image" src="https://github.com/user-attachments/assets/e9898f22-80c8-42d9-9786-cc410db27e5e" />
+
+<img width="1909" height="911" alt="image" src="https://github.com/user-attachments/assets/da7ce281-c00c-4208-9b33-c73c3c223fae" />
+
+<img width="1908" height="901" alt="image" src="https://github.com/user-attachments/assets/1d3099cd-28bf-457f-b51c-67d214607e86" />
 
 ## About Laravel
 
