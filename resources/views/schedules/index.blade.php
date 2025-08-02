@@ -95,21 +95,21 @@
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <a href="{{ route('schedules.show', $doctor) }}" 
+                                            <!-- <a href="{{ route('schedules.show', $doctor) }}" 
                                                class="btn btn-sm btn-primary" 
                                                title="Xem chi tiết lịch">
                                                 <i class="fas fa-eye"></i>
-                                            </a>
+                                            </a> -->
                                             <a href="{{ route('schedules.edit-weekly', $doctor) }}" 
                                                class="btn btn-sm btn-warning" 
                                                title="Sửa lịch tuần">
                                                 <i class="fas fa-calendar-week"></i>
                                             </a>
-                                            <a href="{{ route('schedules.create-exception', $doctor) }}" 
+                                            <!-- <a href="{{ route('schedules.create-exception', $doctor) }}" 
                                                class="btn btn-sm btn-info" 
                                                title="Thêm ngoại lệ">
                                                 <i class="fas fa-plus"></i>
-                                            </a>
+                                            </a> -->
                                         </div>
                                     </td>
                                 </tr>

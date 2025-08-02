@@ -146,7 +146,7 @@
                         </div>
 
                         <!-- Quick Actions -->
-                        <div class="row mb-4">
+                        <!-- <div class="row mb-4">
                             <div class="col-12">
                                 <div class="alert alert-info">
                                     <h6><i class="fas fa-lightbulb me-2"></i>Thao tác nhanh:</h6>
@@ -163,7 +163,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
