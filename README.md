@@ -11,23 +11,27 @@
 
 ### Đặt Hẹn Khám
 
-<img width="1563" height="783" alt="image" src="https://github.com/user-attachments/assets/aac68058-f88a-4595-a4e0-5dc113e49037" />
+<img width="1749" height="811" alt="image" src="https://github.com/user-attachments/assets/2a0e99ec-8840-4f0d-9ffa-a3ded616e44f" />
 
-<img width="1573" height="880" alt="image" src="https://github.com/user-attachments/assets/77699477-93bf-40db-83be-eb9677fad081" />
+<img width="1582" height="895" alt="image" src="https://github.com/user-attachments/assets/56e2993b-7665-44e8-b2e2-fdd0a8157cca" />
 
-<img width="1566" height="810" alt="image" src="https://github.com/user-attachments/assets/876c9a42-b0f2-4df9-be79-d97f42c1c60f" />
+<img width="1610" height="872" alt="image" src="https://github.com/user-attachments/assets/2f1cd736-4430-4dfe-8ac9-247953cc1b64" />
 
-<img width="1600" height="728" alt="image" src="https://github.com/user-attachments/assets/6ebd31a6-3011-4175-85fe-1fded3408d74" />
+<img width="1512" height="668" alt="image" src="https://github.com/user-attachments/assets/e27457ab-e456-4f6d-86fa-786c23e6443e" />
 
 ### Giao diện quản lý
 
-<img width="1920" height="842" alt="image" src="https://github.com/user-attachments/assets/f1bc81db-bc92-49ed-afcf-5530bc183e14" />
+<img width="1918" height="878" alt="image" src="https://github.com/user-attachments/assets/b90bc4c2-83ab-4539-840d-e2f6d9384824" />
 
-<img width="1899" height="918" alt="image" src="https://github.com/user-attachments/assets/099e92dd-09ed-4f69-bc9c-364370f59f7e" />
+<img width="1907" height="889" alt="image" src="https://github.com/user-attachments/assets/01af657d-f16d-49d8-b8c9-62a5c3d498b7" />
 
-<img width="1920" height="737" alt="image" src="https://github.com/user-attachments/assets/e7113604-3d57-436b-b8c9-27686b6b1cd9" />
+<img width="1920" height="828" alt="image" src="https://github.com/user-attachments/assets/8aee6505-d046-4eda-a441-a98c4cf088a0" />
 
-<img width="1906" height="916" alt="image" src="https://github.com/user-attachments/assets/06de36a7-5308-4612-a4a6-4af45188add2" />
+<img width="1911" height="884" alt="image" src="https://github.com/user-attachments/assets/e9898f22-80c8-42d9-9786-cc410db27e5e" />
+
+<img width="1909" height="911" alt="image" src="https://github.com/user-attachments/assets/da7ce281-c00c-4208-9b33-c73c3c223fae" />
+
+<img width="1908" height="901" alt="image" src="https://github.com/user-attachments/assets/1d3099cd-28bf-457f-b51c-67d214607e86" />
 
 ## About Laravel
 
