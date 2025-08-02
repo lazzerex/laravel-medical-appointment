@@ -6,6 +6,7 @@ use App\Models\Doctor;
 use App\Models\DoctorWeeklySchedule;
 use App\Models\DoctorSchedule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class ScheduleController extends Controller
@@ -15,14 +16,14 @@ class ScheduleController extends Controller
         $doctors = Doctor::with(['hospital', 'specialty', 'weeklySchedules'])
             ->orderBy('name')
             ->get();
-        
+
         return view('schedules.index', compact('doctors'));
     }
 
     public function show(Doctor $doctor)
     {
         $doctor->load(['weeklySchedules', 'scheduleExceptions.doctor']);
-        
+
         // Get upcoming exceptions
         $upcomingExceptions = $doctor->scheduleExceptions()
             ->future()
@@ -36,26 +37,71 @@ class ScheduleController extends Controller
     public function editWeekly(Doctor $doctor)
     {
         $weeklySchedules = $doctor->getWeeklySchedule();
-        
+
         return view('schedules.edit-weekly', compact('doctor', 'weeklySchedules'));
     }
 
     public function updateWeekly(Request $request, Doctor $doctor)
-    {
-        $request->validate([
-            'schedules' => 'required|array',
+{
+    Log::info('updateWeekly called for doctor: ' . $doctor->id);
+    Log::info('Request data: ', $request->all());
+    Log::info('Request headers: ', $request->headers->all());
+
+    try {
+        // Validate the request
+        $validated = $request->validate([
+            'schedules' => 'required|array|min:7|max:7',
             'schedules.*.day_of_week' => 'required|integer|between:1,7',
-            'schedules.*.is_active' => 'boolean',
-            'schedules.*.start_time' => 'required_if:schedules.*.is_active,true|nullable|date_format:H:i',
-            'schedules.*.end_time' => 'required_if:schedules.*.is_active,true|nullable|date_format:H:i|after:schedules.*.start_time',
+            'schedules.*.is_active' => 'sometimes|in:0,1',
+            'schedules.*.start_time' => 'nullable|date_format:H:i',
+            'schedules.*.end_time' => 'nullable|date_format:H:i|after:schedules.*.start_time',
+        ], [
+            'schedules.required' => 'Dữ liệu lịch làm việc không hợp lệ',
+            'schedules.*.day_of_week.required' => 'Ngày trong tuần không hợp lệ',
+            'schedules.*.day_of_week.between' => 'Ngày trong tuần phải từ 1 đến 7',
+            'schedules.*.start_time.date_format' => 'Giờ bắt đầu không đúng định dạng',
+            'schedules.*.end_time.date_format' => 'Giờ kết thúc không đúng định dạng',
+            'schedules.*.end_time.after' => 'Giờ kết thúc phải sau giờ bắt đầu',
         ]);
 
-        foreach ($request->schedules as $scheduleData) {
+        Log::info('Validation passed');
+
+        // Check if at least one day is active
+        $hasActiveDay = false;
+        foreach ($validated['schedules'] as $schedule) {
+            if (isset($schedule['is_active']) && $schedule['is_active'] == '1') {
+                $hasActiveDay = true;
+                break;
+            }
+        }
+
+        if (!$hasActiveDay) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Vui lòng chọn ít nhất một ngày làm việc',
+                'errors' => ['schedules' => ['Phải có ít nhất một ngày làm việc']]
+            ], 422);
+        }
+
+        // Process each day
+        $updatedDays = [];
+        foreach ($validated['schedules'] as $scheduleData) {
             $dayOfWeek = $scheduleData['day_of_week'];
-            $isActive = isset($scheduleData['is_active']) && $scheduleData['is_active'];
+            $isActive = isset($scheduleData['is_active']) && $scheduleData['is_active'] == '1';
+
+            Log::info("Processing day {$dayOfWeek}, active: " . ($isActive ? 'yes' : 'no'));
 
             if ($isActive) {
-                DoctorWeeklySchedule::updateOrCreate(
+                // Validate time inputs for active days
+                if (empty($scheduleData['start_time']) || empty($scheduleData['end_time'])) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Vui lòng nhập đầy đủ giờ làm việc cho các ngày đã chọn',
+                        'errors' => ['time' => ['Thiếu thông tin giờ làm việc']]
+                    ], 422);
+                }
+
+                $schedule = DoctorWeeklySchedule::updateOrCreate(
                     ['doctor_id' => $doctor->id, 'day_of_week' => $dayOfWeek],
                     [
                         'start_time' => $scheduleData['start_time'],
@@ -63,17 +109,86 @@ class ScheduleController extends Controller
                         'is_active' => true,
                     ]
                 );
+                
+                $updatedDays[] = $dayOfWeek;
+                Log::info("Updated/Created schedule for day {$dayOfWeek}");
             } else {
-                // If not active, either delete or mark as inactive
+                // Deactivate schedule for this day
                 DoctorWeeklySchedule::where('doctor_id', $doctor->id)
                     ->where('day_of_week', $dayOfWeek)
                     ->update(['is_active' => false]);
+                
+                Log::info("Deactivated schedule for day {$dayOfWeek}");
             }
         }
 
-        return redirect()->route('schedules.show', $doctor)
-            ->with('success', 'Đã cập nhật lịch làm việc hàng tuần thành công!');
+        Log::info('All schedules processed successfully');
+
+        // Prepare response
+        $message = 'Đã cập nhật lịch làm việc hàng tuần thành công!';
+        
+        if (count($updatedDays) > 0) {
+            $dayNames = [
+                1 => 'Thứ 2', 2 => 'Thứ 3', 3 => 'Thứ 4', 4 => 'Thứ 5',
+                5 => 'Thứ 6', 6 => 'Thứ 7', 7 => 'Chủ nhật'
+            ];
+            
+            $activeDayNames = array_map(function($day) use ($dayNames) {
+                return $dayNames[$day];
+            }, $updatedDays);
+            
+            $message .= ' Ngày làm việc: ' . implode(', ', $activeDayNames);
+        }
+
+        // Return JSON response for AJAX requests
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'data' => [
+                    'doctor_id' => $doctor->id,
+                    'updated_days' => $updatedDays,
+                    'timestamp' => now()->toISOString()
+                ]
+            ]);
+        }
+
+        // Traditional redirect for form submissions
+        return redirect()->route('schedules.index')
+            ->with('success', $message);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        Log::error('Validation failed: ', $e->errors());
+        
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dữ liệu không hợp lệ',
+                'errors' => $e->errors()
+            ], 422);
+        }
+        
+        return redirect()->back()
+            ->withErrors($e->errors())
+            ->withInput();
+            
+    } catch (\Exception $e) {
+        Log::error('Error updating weekly schedule: ' . $e->getMessage());
+        Log::error('Stack trace: ' . $e->getTraceAsString());
+        
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Có lỗi xảy ra khi cập nhật lịch làm việc: ' . $e->getMessage(),
+                'errors' => ['system' => [$e->getMessage()]]
+            ], 500);
+        }
+        
+        return redirect()->back()
+            ->withErrors(['error' => 'Có lỗi xảy ra khi cập nhật lịch làm việc: ' . $e->getMessage()])
+            ->withInput();
     }
+}
 
     public function createException(Doctor $doctor)
     {
@@ -150,7 +265,7 @@ class ScheduleController extends Controller
 
         $date = $request->date;
         $scheduleStatus = $doctor->getScheduleStatus($date);
-        
+
         return response()->json([
             'date' => $date,
             'doctor' => $doctor->name,
@@ -169,16 +284,16 @@ class ScheduleController extends Controller
 
         $year = $request->year;
         $month = $request->month;
-        
+
         $startDate = Carbon::create($year, $month, 1);
         $endDate = $startDate->copy()->endOfMonth();
-        
+
         $availability = [];
-        
+
         for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
             $dateStr = $date->toDateString();
             $scheduleStatus = $doctor->getScheduleStatus($dateStr);
-            
+
             $availability[] = [
                 'date' => $dateStr,
                 'day_of_week' => $date->dayOfWeek,

@@ -72,11 +72,11 @@
      color: white;
  }
 
- .step.completed .step-number::after {
+ /* .step.completed .step-number::after {
      content: '✓';
      font-size: 18px;
      font-weight: bold;
- }
+ } */
 
  .step-title {
      font-size: 14px;
@@ -418,7 +418,7 @@
      box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
  }
 
- .no-slots,
+ /* .no-slots,
  .loading {
      text-align: center;
      padding: 40px 20px;
@@ -432,7 +432,7 @@
      margin-bottom: 12px;
      display: block;
      color: #d1d5db;
- }
+ } */
 
  .slots-info {
      grid-column: 1 / -1;
@@ -609,7 +609,7 @@
  }
 
  /* Loading Animation */
- .loading::after {
+ /* .loading::after {
      content: '';
      display: inline-block;
      width: 20px;
@@ -625,7 +625,7 @@
      to {
          transform: rotate(360deg);
      }
- }
+ } */
 
  /* Responsive Design */
  @media (max-width: 768px) {
