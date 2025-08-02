@@ -150,7 +150,7 @@
                 <div class="success-message">
                     <div id="successContent">
                         <i class="fas fa-check-circle"></i>
-                        <h3>Đặt hẹn khám của bạn đã hoàn tất!</h3>
+                        <h3>Hãy gửi yêu cầu để đặt lịch hẹn!</h3>
                         <p>Chúng tôi sẽ liên hệ lại với bạn trong thời gian sớm nhất.</p>
                         <button type="button" id="submitAppointmentBtn" class="btn btn-primary">
                             <i class="fas fa-paper-plane"></i> Gửi yêu cầu đặt hẹn
