@@ -8,6 +8,67 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SpecialtyController;
 use App\Http\Controllers\ScheduleController;
 
+Route::get('/debug-days/{doctor}', function($doctorId) {
+    $doctor = \App\Models\Doctor::find($doctorId);
+    
+    $results = [];
+    
+    // Test each day of the week
+    for ($i = 0; $i < 7; $i++) {
+        $date = now()->startOfWeek()->addDays($i); // This week's Monday + i days
+        $carbonDayOfWeek = $date->dayOfWeek;
+        $convertedDay = $carbonDayOfWeek == 0 ? 7 : $carbonDayOfWeek;
+        
+        $schedule = $doctor->weeklySchedules()
+            ->where('day_of_week', $convertedDay)
+            ->where('is_active', true)
+            ->first();
+            
+        $results[] = [
+            'date' => $date->format('Y-m-d'),
+            'day_name' => $date->format('l'),
+            'carbon_day_of_week' => $carbonDayOfWeek,
+            'converted_day' => $convertedDay,
+            'has_schedule' => $schedule ? true : false,
+            'schedule_time' => $schedule ? $schedule->start_time . '-' . $schedule->end_time : null
+        ];
+    }
+    
+    return [
+        'doctor' => $doctor->name,
+        'database_schedules' => $doctor->weeklySchedules()->where('is_active', true)->get(),
+        'day_mapping_test' => $results
+    ];
+});
+
+// Also add this simpler debug endpoint:
+Route::get('/debug-simple/{doctor}', function($doctorId) {
+    $doctor = \App\Models\Doctor::find($doctorId);
+    
+    // Check what's in the database
+    $dbSchedules = $doctor->weeklySchedules()->where('is_active', true)->get();
+    
+    // Test today
+    $today = now();
+    $slots = $doctor->getAvailableSlots($today->toDateString());
+    
+    return [
+        'doctor' => $doctor->name,
+        'today' => $today->format('l, Y-m-d'),
+        'today_carbon_day' => $today->dayOfWeek,
+        'today_converted' => $today->dayOfWeek == 0 ? 7 : $today->dayOfWeek,
+        'available_slots_count' => count($slots),
+        'database_schedules' => $dbSchedules->map(function($s) {
+            return [
+                'day_of_week' => $s->day_of_week,
+                'day_name' => [1=>'Mon',2=>'Tue',3=>'Wed',4=>'Thu',5=>'Fri',6=>'Sat',7=>'Sun'][$s->day_of_week],
+                'time' => $s->start_time . '-' . $s->end_time,
+                'active' => $s->is_active
+            ];
+        })
+    ];
+});
+
 // Appointment booking (public)
 Route::get('/', [AppointmentController::class, 'index'])->name('appointments.form');
 Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');

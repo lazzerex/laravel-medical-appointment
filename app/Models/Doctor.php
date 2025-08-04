@@ -43,11 +43,13 @@ class Doctor extends Model
     public function getAvailableSlots($date)
     {
         $carbonDate = Carbon::parse($date);
-        $dayOfWeek = $carbonDate->dayOfWeek == 0 ? 7 : $carbonDate->dayOfWeek; // Convert Sunday from 0 to 7
+
+        // Fix: Convert Carbon's dayOfWeek (0=Sunday, 1=Monday...) to database format (1=Monday, 7=Sunday)
+        $dayOfWeek = $carbonDate->dayOfWeek === 0 ? 7 : $carbonDate->dayOfWeek;
 
         // First check if there's an exception for this specific date
         $exception = $this->scheduleExceptions()->where('date', $date)->first();
-        
+
         if ($exception) {
             return $this->handleScheduleException($exception, $date);
         }
@@ -78,14 +80,14 @@ class Doctor extends Model
             case 'unavailable':
             case 'holiday':
                 return []; // No slots available
-                
+
             case 'custom_hours':
                 if ($exception->start_time && $exception->end_time) {
                     $slots = $this->generateTimeSlots($exception->start_time, $exception->end_time);
                     return $this->removeBookedSlots($slots, $date);
                 }
                 return [];
-                
+
             default:
                 return [];
         }
@@ -101,7 +103,8 @@ class Doctor extends Model
         $end = Carbon::parse($endTime);
         $slotDuration = 30; // minutes
 
-        while ($current->lt($end)) {
+        // Generate slots every 30 minutes from start time up to (and including) end time
+        while ($current->lte($end)) {
             $slots[] = $current->format('H:i');
             $current->addMinutes($slotDuration);
         }
@@ -141,11 +144,12 @@ class Doctor extends Model
     public function getScheduleStatus($date)
     {
         $carbonDate = Carbon::parse($date);
-        $dayOfWeek = $carbonDate->dayOfWeek == 0 ? 7 : $carbonDate->dayOfWeek;
+        // Fix: Same conversion here
+        $dayOfWeek = $carbonDate->dayOfWeek === 0 ? 7 : $carbonDate->dayOfWeek;
 
         // Check for exceptions first
         $exception = $this->scheduleExceptions()->where('date', $date)->first();
-        
+
         if ($exception) {
             return [
                 'type' => 'exception',
