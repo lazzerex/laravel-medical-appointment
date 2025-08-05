@@ -258,16 +258,22 @@ class EnhancedAppointmentBooking {
 
         const firstDay = new Date(this.currentYear, this.currentMonth, 1);
         const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
-        const startDate = new Date(firstDay);
-
-        // Adjust to start from Monday
-        const dayOfWeek = firstDay.getDay();
-        const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-        startDate.setDate(firstDay.getDate() - mondayOffset);
-
+        
         const calendarDays = document.getElementById('calendarDays');
         calendarDays.innerHTML = '';
 
+        // Start from Monday (we need to adjust the first day of the calendar)
+        const startDate = new Date(firstDay);
+        
+        // Get the day of week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+        const firstDayOfWeek = firstDay.getDay();
+        
+        // Calculate how many days to go back to get to Monday
+        // If Sunday (0), go back 6 days; if Monday (1), go back 0 days; etc.
+        const daysToGoBack = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
+        startDate.setDate(firstDay.getDate() - daysToGoBack);
+
+        // Generate 42 days (6 weeks x 7 days)
         for (let i = 0; i < 42; i++) {
             const currentDate = new Date(startDate);
             currentDate.setDate(startDate.getDate() + i);
@@ -301,7 +307,7 @@ class EnhancedAppointmentBooking {
 
         // Check if we have calendar data for this date
         if (this.calendarData && this.calendarData.calendar_data) {
-            const dateStr = date.toISOString().split('T')[0];
+            const dateStr = this.formatDateString(date);
             const dayData = this.calendarData.calendar_data.find(d => d.date === dateStr);
 
             if (dayData) {
@@ -338,6 +344,14 @@ class EnhancedAppointmentBooking {
         return dayElement;
     }
 
+    // Helper function to format date as YYYY-MM-DD
+    formatDateString(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     async selectDate(date) {
         // Remove previous selection
         document.querySelectorAll('.calendar-day.selected').forEach(day => {
@@ -348,15 +362,14 @@ class EnhancedAppointmentBooking {
         event.target.classList.add('selected');
 
         this.selectedDate = date;
-        // Format date as YYYY-MM-DD
-        document.getElementById('selectedDate').value = date.getFullYear() + '-' +
-            String(date.getMonth() + 1).padStart(2, '0') + '-' +
-            String(date.getDate()).padStart(2, '0');
+        
+        // Format date as YYYY-MM-DD for the form
+        document.getElementById('selectedDate').value = this.formatDateString(date);
 
-        // Update time slot header
+        // Update time slot header with proper day names
         const dayNames = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
         const dayName = dayNames[date.getDay()];
-        const dateStr = `${dayName}, Th${date.getMonth() + 1} ${date.getDate()}`;
+        const dateStr = `${dayName}, ${date.getDate()}/${date.getMonth() + 1}`;
         document.querySelector('.time-slot-header').textContent = dateStr;
 
         // Load available time slots
@@ -373,7 +386,7 @@ class EnhancedAppointmentBooking {
         }
 
         try {
-            const dateStr = date.toISOString().split('T')[0];
+            const dateStr = this.formatDateString(date);
             const response = await fetch(`/available-slots?doctor_id=${this.selectedDoctor}&date=${dateStr}`);
             const data = await response.json();
 
